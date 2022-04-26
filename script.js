@@ -1,80 +1,99 @@
+// Step 1: Get user coordinates
+
 function getCoordintes() {
 
-    var options = {
+    var options = {
 
-        enableHighAccuracy: true,
+        enableHighAccuracy: true,
 
-        timeout: 5000,
+        timeout: 5000,
 
-        maximumAge: 0
+        maximumAge: 0
 
-    };
+    };
 
-  
+  
 
-    function success(pos) {
+    function success(pos) {
 
-        var crd = pos.coords;
+        var crd = pos.coords;
 
-        var lat = crd.latitude.toString();
+        var lat = crd.latitude.toString();
 
-        var lng = crd.longitude.toString();
+        var lng = crd.longitude.toString();
 
-        var coordinates = [lat, lng];
+        var coordinates = [lat, lng];
 
-        console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+        console.log(`Latitude: ${lat}, Longitude: ${lng}`);
 
-        getCity(coordinates);
+        getCity(coordinates);
 
-        return;
+        return;
 
-  
+  
 
-    }
+    }
 
-  
+  
 
-    function error(err) {
+    function error(err) {
 
-        console.warn(`ERROR(${err.code}): ${err.message}`);
+        console.warn(`ERROR(${err.code}): ${err.message}`);
 
-    }
+    }
 
-  
+  
 
-    navigator.geolocation.getCurrentPosition(success, error, options);
+    navigator.geolocation.getCurrentPosition(success, error, options);
 
 }
-
-  
 
 // Step 2: Get city name
 
 function getCity(coordinates) {
 
-    var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
 
-    var lat = coordinates[0];
+    var lat = coordinates[0];
 
-    var lng = coordinates[1];
+    var lng = coordinates[1];
 
-  
+  
 
-    // Paste your LocationIQ token below.
+    // Paste your LocationIQ token below.
 
-    xhr.open('GET', "
+    xhr.open('GET', "
 
 https://us1.locationiq.com/v1/reverse.php?key=YOUR_PRIVATE_TOKEN&lat=" +
 
-    lat + "&lon=" + lng + "&format=json", true);
+    lat + "&lon=" + lng + "&format=json", true);
 
-    xhr.send();
+    xhr.send();
 
-    xhr.onreadystatechange = processRequest;
+    xhr.onreadystatechange = processRequest;
 
-    xhr.addEventListener("readystatechange", processRequest, false);
+    xhr.addEventListener("readystatechange", processRequest, false);
 
-  
+  
 
-    function processRequest(e) {
+    function processRequest(e) {
 
+        if (xhr.readyState == 4 && xhr.status == 200) {
+
+            var response = JSON.parse(xhr.responseText);
+
+            var city = response.address.city;
+
+            console.log(city);
+
+            return;
+
+        }
+
+    }
+
+}
+
+  
+
+getCoordintes();
